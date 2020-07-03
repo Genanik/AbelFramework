@@ -15,7 +15,7 @@ object Framework : PluginBase() {
     override fun onEnable() {
         super.onEnable()
 
-        logger.info("Abel插件管理器loaded")
+        logger.info("Abel Framework loaded")
 
         // 绑定command
         subscribeGroupMessages {
@@ -34,8 +34,6 @@ object Framework : PluginBase() {
                 }
             }
         }
-
-
 
     }
 
