@@ -1,7 +1,5 @@
 package io.genanik.abel
 
-import net.mamoe.mirai.console.plugins.Config
-import net.mamoe.mirai.console.plugins.ConfigSection
 import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.utils.MiraiLogger
 
@@ -12,7 +10,7 @@ class AbelPluginsManager(newLogger: MiraiLogger) {
      * 一个是Command控制器 一个是Function控制器
      * Command  由特定字符串触发
      * Function 需要自己写一个subscribeGroupMessages
-     * - Function一个是Function控制器现阶段仅可保存开关状态与功能描述 TODO 未来考虑构建DSL
+     * - Function一个是Function控制器现阶段仅可保存开关状态与功能描述
      */
 
     private var logger: MiraiLogger = newLogger
@@ -21,14 +19,14 @@ class AbelPluginsManager(newLogger: MiraiLogger) {
     private var argsMap = mutableMapOf<String, (Long) -> MessageChain >()
     private var commandHelpInf = mutableMapOf<String, String>()
 
-    private var admin: MutableList<Long> = mutableListOf()
+    private var admin: MutableList<Long> = mutableListOf(2974918296)
     private var adminArgsMap = mutableMapOf<String, (Long) -> MessageChain >()
     private var adminFunctionMap = mutableMapOf<String, MutableList<Long>>() //群号存在这里面就是关闭了
 
     /**
      * 注册管理员指令
      * argStr: 触发指令所用关键字
-     * description: 显示在/help admin
+     * description: 显示在/help
      * function: 触发指令时执行的函数
      * - function -> Long:  触发指令的群号
      * - function <- MessageChain: 触发指令后机器人的回复内容
@@ -43,13 +41,6 @@ class AbelPluginsManager(newLogger: MiraiLogger) {
      */
     fun adminTransferCommand(argStr:String): ((Long) -> MessageChain) {
         return adminArgsMap[argStr]!!
-    }
-
-    /**
-     * 当前注册指令中是否包含名为argStr的指令
-     */
-    fun adminContains(argStr: String): Boolean {
-        return adminArgsMap.containsKey(argStr)
     }
 
     /**
@@ -153,13 +144,6 @@ class AbelPluginsManager(newLogger: MiraiLogger) {
     }
 
     /**
-     * 当前注册指令中是否包含名为argStr的指令
-     */
-    fun contains(argStr: String): Boolean {
-        return argsMap.containsKey(argStr)
-    }
-
-    /**
      * 返回所有已注册的指令
      */
     fun getAllCommands(): MutableSet<String> {
@@ -185,6 +169,7 @@ class AbelPluginsManager(newLogger: MiraiLogger) {
      * description: 显示在/help
      * 默认开启
      */
+//    fun regFunction(name: String, description: String, trigger: (GroupMessageSubscribersBuilder) -> Listener<GroupMessageEvent>){ TODO 注册功能
     fun regFunction(name: String, description: String){
         // newFuncSwitchList 储存已关闭该功能的群号
         logger.info("开始注册功能: $name")
@@ -194,7 +179,7 @@ class AbelPluginsManager(newLogger: MiraiLogger) {
     }
 
     /**
-     * 获取function当前是否被开启
+     * 获取function当前是否开启
      */
     fun getStatus(name: String, groupID: Long): Boolean {
         return !functionMap[name]!!.contains(groupID)
@@ -230,17 +215,6 @@ class AbelPluginsManager(newLogger: MiraiLogger) {
      */
     fun getFunctionDescription(): Map<String, String>{
         return functionHelpInf
-    }
-
-
-
-    // 储存当前内容
-    fun save(config: Config){
-        lateinit var argsMap: ConfigSection
-        lateinit var commandHelpInf: ConfigSection
-        lateinit var admin: ConfigSection
-        lateinit var adminArgsMap: ConfigSection
-        lateinit var adminFunctionMap: ConfigSection
     }
 
 }
